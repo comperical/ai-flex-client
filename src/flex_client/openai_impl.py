@@ -36,6 +36,9 @@ def get_client():
     return OpenAI(api_key=OPENAI_API_KEY)
 
 
+def build_query():
+    return OaiQuery()
+
 
 class OaiQuery(BaseQuery):
 
