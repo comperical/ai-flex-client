@@ -2,6 +2,7 @@
 
 import openai_impl as OAI
 import anthro_impl as ANTHRO
+import gemini_impl as GEMINI
 
 
 def run_simple_query(query):
@@ -19,7 +20,7 @@ if __name__ == '__main__':
     print("Going to run a test")
 
 
-    impl = ANTHRO
+    impl = GEMINI
 
     impl.register_key_from_environment()
 
