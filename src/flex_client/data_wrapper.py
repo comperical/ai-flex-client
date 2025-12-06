@@ -32,12 +32,16 @@ class DataWrapper:
         assert False, "Subclasses must override"
 
 
-    def compute_cost_dollar(self, usage):
+    def _compute_cost_dollar(self, usage):
         icost, ocost = self.get_cost_pair(usage['model_code'])
         itoken = usage['input_tokens'] / 1_000_000
         otoken = usage['output_tokens'] / 1_000_000
         return icost * itoken + ocost * otoken
 
+
+    def get_cost_dollar(self):
+        basicdata = self.compose_standard_metadata()
+        return basicdata['cost_dollar']
 
     # Compile the response metadata (tokens, model code, etc)
     # into a standard form that will work for all API endpoints
@@ -47,7 +51,7 @@ class DataWrapper:
 
         usage = self.compose_basic_metadata()
 
-        usage['cost_dollar'] = self.compute_cost_dollar(usage)
+        usage['cost_dollar'] = self._compute_cost_dollar(usage)
 
         return usage
 
@@ -55,48 +59,7 @@ class DataWrapper:
 
 
 
-
-class OaiWrapper(ApiDataWrapper):
-
-
-    def __init__(self, rjson):
-        super().__init__(rjson)
-
-
-    def get_basic_text(self):
-        return self.responsejson["choices"][0]["message"]["content"]
-
-
-    # https://openai.com/api/pricing/
-    def get_cost_pair(self, modelcode):
-
-        if modelcode.startswith(UTIL.GPT4O_MINI):
-            return (0.15, 0.6)
-
-
-        if modelcode.startswith(UTIL.GPT_4O):
-            return (2.5, 10)
-
-        if modelcode.startswith(UTIL.GPT_5_MINI):
-            return (0.25, 2)
-
-        assert False, f"No cost info available for modelcode {modelcode}"
-
-
-
-
-    def compose_basic_metadata(self):
-
-        usage = self.responsejson['usage']
-
-        return {
-            'message_id' : self.responsejson['id'],
-            'model_family' : 'gpt',
-            'model_code' : self.responsejson['model'],
-            'input_tokens' : usage['prompt_tokens'],
-            'output_tokens' : usage['completion_tokens']
-        }
-
+"""
 
 class SyntheticWrapper(OaiWrapper):
 
@@ -160,4 +123,4 @@ class GeminiWrapper(ApiDataWrapper):
 
         assert False, f"No cost info available for modelcode {modelcode}"
 
-
+"""

@@ -4,6 +4,9 @@
 import os
 import sys
 import json
+from typing import Any
+
+import utility as UTIL
 
 
 
@@ -76,7 +79,7 @@ class BaseQuery:
     def set_large_tier(self) -> "BaseQuery":
         assert False, "Subclass must override"
 
-    def get_data_wrapper(self) -> WRAPPER.ApiDataWrapper:
+    def get_data_wrapper(self) -> "DataWrapper":
         assert False, "Subclass must override"
 
 
@@ -95,9 +98,6 @@ class BaseQuery:
 
         if self.response != None:
             return self.convert_response2_json()
-
-        if self.db_record != None:
-            return self.db_record['full_response']
 
         return None
 
@@ -149,10 +149,13 @@ class BaseQuery:
 
     def _configure_params(self):
 
+        """
         source = json.loads(self.db_record['source_data'])
 
         if "max_token" in source:
             self.with_max_token(source["max_token"])
+
+        """
 
 
     # This returns whatever the provider returns from a query
@@ -162,40 +165,9 @@ class BaseQuery:
 
 
 
-class GeminiQuery(GaiQuery):
-
-    def __init__(self):
-        super().__init__()
-        self.model_code = UTIL.GEMINI_20_FLASH
 
 
-    def convert_response2_json(self):
-        assert self.response != None, "Response is null, you must generate it first or check before calling here"
-        return self.response.model_dump_json()
-
-
-    def run_get_data(self):
-        self.od_run_query()
-        return self.get_data_wrapper()
-
-    def get_data_wrapper(self):
-        rjson = self.get_response_json()
-        assert rjson != None, "You must either run the query, or load from DB"
-        return WRAPPER.GeminiWrapper(json.loads(rjson))
-
-    def _sub_run_query(self):
-
-        # Annoying issue here where Gemini can only handle a single message
-        assert self.messages != None and len(self.messages) == 1, "Currently Gemini can only handle single outbound message"
-        singlemssg = self.messages[0]['content']
-
-        return UTIL.get_gemini_client().models.generate_content(
-            model=self.model_code,
-            contents=singlemssg
-        )
-
-
-
+"""
 # This is a hosted service that apparently uses the same exact API as OpenAI
 class SyntheticQuery(OaiQuery):
 
@@ -221,6 +193,6 @@ class SyntheticQuery(OaiQuery):
             model=self.model_code,
             messages=self.messages  # type: ignore[arg-type]
         )
-
+"""
 
 

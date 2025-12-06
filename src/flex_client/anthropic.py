@@ -37,7 +37,7 @@ class AnthroQuery(BaseQuery):
 
 
 
-class AnthroWrapper(ApiDataWrapper):
+class AnthroWrapper(DataWrapper):
 
 
     def __init__(self, rjson):

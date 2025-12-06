@@ -1,4 +1,12 @@
 
+import os
+import json
+import functools
+
+import utility as UTIL
+
+from base_query import BaseQuery
+from data_wrapper import DataWrapper
 
 GPT_4O = "gpt-4o"
 
@@ -8,8 +16,28 @@ GPT_5 = "gpt-5-2025-08-07"
 
 GPT_5_MINI = "gpt-5-mini"
 
+OPENAI_API_KEY = None
 
-class OaiQuery(GaiQuery):
+def register_api_key(apikey):
+    global OPENAI_API_KEY
+    OPENAI_API_KEY = apikey
+
+
+def register_key_from_environment():
+    envkey = os.environ.get("OPENAI_API_KEY", None)
+    assert envkey != None, f"You must set the environment variable OPENAI_API_KEY"
+    register_api_key(envkey)
+
+
+@functools.lru_cache(maxsize=1)
+def get_client():
+    from openai import OpenAI
+    assert OPENAI_API_KEY != None, f"You must register an API key before calling"
+    return OpenAI(api_key=OPENAI_API_KEY)
+
+
+
+class OaiQuery(BaseQuery):
 
     def __init__(self):
         super().__init__()
@@ -29,12 +57,12 @@ class OaiQuery(GaiQuery):
 
 
     def set_small_tier(self):
-        self.model_code = UTIL.GPT_5_MINI
+        self.model_code = GPT_5_MINI
         return self
 
 
     def set_medium_tier(self):
-        self.model_code = UTIL.GPT_5
+        self.model_code = GPT_5
         return self
 
 
@@ -42,13 +70,13 @@ class OaiQuery(GaiQuery):
 
         rjson = self.get_response_json()
         assert rjson != None, "You must either run the query, or load from DB"
-        return WRAPPER.OaiWrapper(json.loads(rjson))
+        return OaiWrapper(json.loads(rjson))
 
     def _sub_run_query(self):
 
         assert self.messages is not None, "You must initialize messages"
 
-        return UTIL.get_openai_client().chat.completions.create(
+        return get_client().chat.completions.create(
             model=self.model_code,
             messages=self.messages, # type: ignore[arg-type]
             max_completion_tokens=self.max_token
@@ -56,7 +84,7 @@ class OaiQuery(GaiQuery):
 
 
 
-class OaiWrapper(ApiDataWrapper):
+class OaiWrapper(DataWrapper):
 
 
     def __init__(self, rjson):
@@ -70,14 +98,13 @@ class OaiWrapper(ApiDataWrapper):
     # https://openai.com/api/pricing/
     def get_cost_pair(self, modelcode):
 
-        if modelcode.startswith(UTIL.GPT4O_MINI):
+        if modelcode.startswith(GPT4O_MINI):
             return (0.15, 0.6)
 
-
-        if modelcode.startswith(UTIL.GPT_4O):
+        if modelcode.startswith(GPT_4O):
             return (2.5, 10)
 
-        if modelcode.startswith(UTIL.GPT_5_MINI):
+        if modelcode.startswith(GPT_5_MINI):
             return (0.25, 2)
 
         assert False, f"No cost info available for modelcode {modelcode}"
