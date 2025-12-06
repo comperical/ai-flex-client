@@ -26,7 +26,7 @@ class BaseQuery:
 
 
     def is_complete():
-        return self.send_time_milli is not None
+        return self.resp_time_milli is not None
 
 
     @staticmethod
