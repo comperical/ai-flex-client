@@ -3,10 +3,9 @@ import os
 import json
 import functools
 
-import utility as UTIL
-
-from base_query import BaseQuery
-from data_wrapper import DataWrapper
+from . import utility as UTIL
+from .base_query import BaseQuery
+from .data_wrapper import DataWrapper
 
 GPT_4O = "gpt-4o"
 
@@ -17,6 +16,9 @@ GPT_5 = "gpt-5-2025-08-07"
 GPT_5_MINI = "gpt-5-mini"
 
 OPENAI_API_KEY = None
+
+def is_configured():
+    return OPENAI_API_KEY != None
 
 def register_api_key(apikey):
     global OPENAI_API_KEY

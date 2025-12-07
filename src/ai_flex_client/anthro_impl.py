@@ -3,15 +3,18 @@ import os
 import json
 import functools
 
-import utility as UTIL
-from base_query import BaseQuery
-from data_wrapper import DataWrapper
+from . import utility as UTIL
+from .base_query import BaseQuery
+from .data_wrapper import DataWrapper
 
 SONNET_MODEL_CODE = "claude-sonnet-4-5-20250929"
 
 HAIKU_MODEL_CODE = "claude-haiku-4-5-20251001"
 
 ANTHRO_API_KEY = None
+
+def is_configured():
+    return ANTHRO_API_KEY != None
 
 def register_api_key(apikey):
     global ANTHRO_API_KEY

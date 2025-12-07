@@ -6,7 +6,7 @@ import sys
 import json
 from typing import Any
 
-import utility as UTIL
+from . import utility as UTIL
 
 
 

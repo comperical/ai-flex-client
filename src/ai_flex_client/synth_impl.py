@@ -4,18 +4,22 @@ import os
 import json
 import functools
 
-import utility as UTIL
+from . import utility as UTIL
+from .base_query import BaseQuery
+from .data_wrapper import DataWrapper
 
-from base_query import BaseQuery
-from data_wrapper import DataWrapper
 
-import openai_impl as OAI_IMPL
+from . import openai_impl as OAI_IMPL
 
 GPT_OSS_120B = "hf:openai/gpt-oss-120b"
 
 META_LLAMA_70B_INSTRUCT = "hf:meta-llama/Llama-3.3-70B-Instruct"
 
 SYNTH_API_KEY = None
+
+def is_configured():
+    return SYNTH_API_KEY != None
+
 
 def register_api_key(apikey):
     global SYNTH_API_KEY

@@ -4,15 +4,20 @@ import os
 import json
 import functools
 
-import utility as UTIL
-from base_query import BaseQuery
-from data_wrapper import DataWrapper
+from . import utility as UTIL
+from .base_query import BaseQuery
+from .data_wrapper import DataWrapper
+
 
 GEMINI_25_FLASH = "gemini-2.5-flash"
 
 GEMINI_25_PRO = "gemini-2.5-pro"
 
 GEMINI_API_KEY = None
+
+def is_configured():
+    return GEMINI_API_KEY != None
+
 
 def register_api_key(apikey):
     global GEMINI_API_KEY
