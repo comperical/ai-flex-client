@@ -13,21 +13,25 @@ GEMINI_25_FLASH = "gemini-2.5-flash"
 
 GEMINI_25_PRO = "gemini-2.5-pro"
 
-GEMINI_API_KEY = None
+IMPL_API_KEY = None
+
+ENVIRON_VAR_NAME = "GEMINI_API_KEY"
 
 def is_configured():
-    return GEMINI_API_KEY != None
-
+    return IMPL_API_KEY != None
 
 def register_api_key(apikey):
-    global GEMINI_API_KEY
-    GEMINI_API_KEY = apikey
+    global IMPL_API_KEY
+    IMPL_API_KEY = apikey
 
 
 def register_key_from_environment():
-    envkey = os.environ.get("GEMINI_API_KEY", None)
-    assert envkey != None, f"You must set the environment variable GEMINI_API_KEY"
-    register_api_key(envkey)
+    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key)
+
+def opt_register():
+    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key, missingokay=True)
+
+
 
 
 @functools.lru_cache(maxsize=1)
@@ -40,12 +44,12 @@ def get_client():
     # Flask does not allow this by default. So we have to do some
     # incantations to get it to run in the Flask app
     try:
-        return genai.Client(api_key=GEMINI_API_KEY)
+        return genai.Client(api_key=IMPL_API_KEY)
     except RuntimeError as e:
         if "no current event loop" in str(e).lower():
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            return genai.Client(api_key=GEMINI_API_KEY)
+            return genai.Client(api_key=IMPL_API_KEY)
         raise  # If another error occurs, re-raise it
 
 
@@ -67,6 +71,9 @@ class GeminiQuery(BaseQuery):
         return self.response.model_dump_json()
 
 
+    def normalize_response(self, response):
+        return json.loads(response.model_dump_json())
+
     def set_small_tier(self):
         self.model_code = GEMINI_25_FLASH
         return self
@@ -80,10 +87,9 @@ class GeminiQuery(BaseQuery):
         self.od_run_query()
         return self.get_data_wrapper()
 
-    def get_data_wrapper(self):
-        rjson = self.get_response_json()
-        assert rjson != None, "You must either run the query, or load from DB"
-        return GeminiWrapper(json.loads(rjson))
+
+    def get_wrapper_builder(self):
+        return GeminiWrapper
 
     def _sub_run_query(self):
 
@@ -99,28 +105,23 @@ class GeminiQuery(BaseQuery):
 
 class GeminiWrapper(DataWrapper):
 
-
-    def __init__(self, rjson):
-        super().__init__(rjson)
-
-
     def get_basic_text(self):
 
         #print(json.dumps(firstcand['content']['parts'][0]['text'], indent=4, sort_keys=True))
 
-        candlist = self.responsejson['candidates']
+        candlist = self.normal_form['candidates']
         firstcand = candlist[0]
         return firstcand['content']['parts'][0]['text']
 
 
     def compose_basic_metadata(self):
 
-        usage = self.responsejson['usage_metadata']
+        usage = self.normal_form['usage_metadata']
 
         return {
             'message_id' : None,
             'model_family' : 'gemini',
-            'model_code' : self.responsejson['model_version'],
+            'model_code' : self.normal_form['model_version'],
             'input_tokens' : usage['prompt_token_count'],
             'output_tokens' : usage['candidates_token_count']
         }

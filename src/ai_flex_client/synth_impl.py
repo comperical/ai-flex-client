@@ -15,27 +15,31 @@ GPT_OSS_120B = "hf:openai/gpt-oss-120b"
 
 META_LLAMA_70B_INSTRUCT = "hf:meta-llama/Llama-3.3-70B-Instruct"
 
-SYNTH_API_KEY = None
+IMPL_API_KEY = None
+
+ENVIRON_VAR_NAME = "SYNTHETIC_API_KEY"
+
 
 def is_configured():
-    return SYNTH_API_KEY != None
-
+    return IMPL_API_KEY != None
 
 def register_api_key(apikey):
-    global SYNTH_API_KEY
-    SYNTH_API_KEY = apikey
+    global IMPL_API_KEY
+    IMPL_API_KEY = apikey
 
 
 def register_key_from_environment():
-    envkey = os.environ.get("SYNTH_API_KEY", None)
-    assert envkey != None, f"You must set the environment variable SYNTH_API_KEY"
-    register_api_key(envkey)
+    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key)
+
+def opt_register():
+    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key, missingokay=True)
+
 
 
 @functools.lru_cache(maxsize=1)
 def get_client():
     from openai import OpenAI
-    return OpenAI(api_key=SYNTH_API_KEY, base_url="https://api.synthetic.new/v1")
+    return OpenAI(api_key=IMPL_API_KEY, base_url="https://api.synthetic.new/v1")
 
 
 def build_query():
@@ -49,12 +53,8 @@ class SyntheticQuery(OAI_IMPL.OaiQuery):
         self.model_code = GPT_OSS_120B
 
 
-    def get_data_wrapper(self):
-        rjson = self.get_response_json()
-        assert rjson != None, "You must either run the query, or load from DB"
-        return SyntheticWrapper(json.loads(rjson))
-
-
+    def get_wrapper_builder(self):
+        return SyntheticWrapper
 
     def _sub_run_query(self):
 
@@ -70,10 +70,6 @@ class SyntheticQuery(OAI_IMPL.OaiQuery):
 
 
 class SyntheticWrapper(OAI_IMPL.OaiWrapper):
-
-
-    def __init__(self, rjson):
-        super().__init__(rjson)
 
 
     # https://synthetic.new/pricing

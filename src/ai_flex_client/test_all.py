@@ -17,6 +17,7 @@ def run_simple_query(query):
 
 def run_all_configured_test():
 
+
     for impl in [OAI, ANTHRO, GEMINI, SYNTH]:
         if not impl.is_configured():
             continue
@@ -26,13 +27,8 @@ def run_all_configured_test():
 
 if __name__ == '__main__':
 
-    print("Going to run a test")
+    for impl in [OAI, ANTHRO, GEMINI, SYNTH]:
+        impl.opt_register()
 
 
-    impl = SYNTH
-
-    impl.register_key_from_environment()
-
-    #OAI.register_key_from_environment()
-
-    run_simple_query(impl.build_query())
+    run_all_configured_test()

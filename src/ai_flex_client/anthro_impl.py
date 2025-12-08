@@ -11,26 +11,31 @@ SONNET_MODEL_CODE = "claude-sonnet-4-5-20250929"
 
 HAIKU_MODEL_CODE = "claude-haiku-4-5-20251001"
 
-ANTHRO_API_KEY = None
+IMPL_API_KEY = None
+
+ENVIRON_VAR_NAME = "ANTHRO_API_KEY"
 
 def is_configured():
-    return ANTHRO_API_KEY != None
+    return IMPL_API_KEY != None
 
 def register_api_key(apikey):
-    global ANTHRO_API_KEY
-    ANTHRO_API_KEY = apikey
+    global IMPL_API_KEY
+    IMPL_API_KEY = apikey
 
 
 def register_key_from_environment():
-    envkey = os.environ.get("ANTHRO_API_KEY", None)
-    assert envkey != None, f"You must set the environment variable ANTHRO_API_KEY"
-    register_api_key(envkey)
+    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key)
+
+
+def opt_register():
+    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key, missingokay=True)
+
 
 
 @functools.lru_cache(maxsize=1)
 def get_client():
     import anthropic
-    return anthropic.Client(api_key=ANTHRO_API_KEY)
+    return anthropic.Client(api_key=IMPL_API_KEY)
 
 
 def build_query():
@@ -46,6 +51,9 @@ class AnthroQuery(BaseQuery):
         self.model_code = HAIKU_MODEL_CODE
         self.max_token = 8192
 
+    def normalize_response(self, response):
+        return json.loads(response.model_dump_json())
+
     def convert_response2_json(self):
         assert self.response != None, "Response is null, you must generate it first or check before calling here"
         return self.response.model_dump_json()
@@ -59,10 +67,9 @@ class AnthroQuery(BaseQuery):
         self.model_code = SONNET_MODEL_CODE
         return self
 
-    def get_data_wrapper(self):
-        rjson = self.get_response_json()
-        assert rjson != None, "You must either run the query, or load from DB"
-        return AnthroWrapper(json.loads(rjson))
+    def get_wrapper_builder(self):
+        return AnthroWrapper
+
 
     def _sub_run_query(self):
 
@@ -78,21 +85,17 @@ class AnthroQuery(BaseQuery):
 class AnthroWrapper(DataWrapper):
 
 
-    def __init__(self, rjson):
-        super().__init__(rjson)
-
-
     def get_basic_text(self):
-        return self.responsejson["content"][0]["text"]
+        return self.normal_form["content"][0]["text"]
 
     def compose_basic_metadata(self):
 
         return {
-            'message_id' : self.responsejson['id'],
+            'message_id' : self.normal_form['id'],
             'model_family' : 'claude',
-            'model_code' : self.responsejson['model'],
-            'input_tokens' : self.responsejson['usage']['input_tokens'],
-            'output_tokens' : self.responsejson['usage']['output_tokens']
+            'model_code' : self.normal_form['model'],
+            'input_tokens' : self.normal_form['usage']['input_tokens'],
+            'output_tokens' : self.normal_form['usage']['output_tokens']
         }
 
 

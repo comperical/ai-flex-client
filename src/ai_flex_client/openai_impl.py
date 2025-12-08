@@ -15,27 +15,31 @@ GPT_5 = "gpt-5-2025-08-07"
 
 GPT_5_MINI = "gpt-5-mini"
 
-OPENAI_API_KEY = None
+IMPL_API_KEY = None
+
+ENVIRON_VAR_NAME = "OPENAI_API_KEY"
 
 def is_configured():
-    return OPENAI_API_KEY != None
+    return IMPL_API_KEY != None
 
 def register_api_key(apikey):
-    global OPENAI_API_KEY
-    OPENAI_API_KEY = apikey
+    global IMPL_API_KEY
+    IMPL_API_KEY = apikey
 
 
 def register_key_from_environment():
-    envkey = os.environ.get("OPENAI_API_KEY", None)
-    assert envkey != None, f"You must set the environment variable OPENAI_API_KEY"
-    register_api_key(envkey)
+    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key)
+
+def opt_register():
+    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key, missingokay=True)
+
 
 
 @functools.lru_cache(maxsize=1)
 def get_client():
     from openai import OpenAI
-    assert OPENAI_API_KEY != None, f"You must register an API key before calling"
-    return OpenAI(api_key=OPENAI_API_KEY)
+    assert IMPL_API_KEY != None, f"You must register an API key before calling"
+    return OpenAI(api_key=IMPL_API_KEY)
 
 
 def build_query():
@@ -55,6 +59,9 @@ class OaiQuery(BaseQuery):
         return self.get_data_wrapper()
 
 
+    def normalize_response(self, response):
+        return response.to_dict()
+
     def convert_response2_json(self):
         assert self.response != None, "Response is null, you must generate it first or check before calling here"
         # Lots of issues here with pydantic versions...!!
@@ -71,11 +78,9 @@ class OaiQuery(BaseQuery):
         return self
 
 
-    def get_data_wrapper(self):
+    def get_wrapper_builder(self):
+        return OaiWrapper
 
-        rjson = self.get_response_json()
-        assert rjson != None, "You must either run the query, or load from DB"
-        return OaiWrapper(json.loads(rjson))
 
     def _sub_run_query(self):
 
@@ -92,12 +97,8 @@ class OaiQuery(BaseQuery):
 class OaiWrapper(DataWrapper):
 
 
-    def __init__(self, rjson):
-        super().__init__(rjson)
-
-
     def get_basic_text(self):
-        return self.responsejson["choices"][0]["message"]["content"]
+        return self.normal_form["choices"][0]["message"]["content"]
 
 
     # https://openai.com/api/pricing/
@@ -117,12 +118,12 @@ class OaiWrapper(DataWrapper):
 
     def compose_basic_metadata(self):
 
-        usage = self.responsejson['usage']
+        usage = self.normal_form['usage']
 
         return {
-            'message_id' : self.responsejson['id'],
+            'message_id' : self.normal_form['id'],
             'model_family' : 'gpt',
-            'model_code' : self.responsejson['model'],
+            'model_code' : self.normal_form['model'],
             'input_tokens' : usage['prompt_tokens'],
             'output_tokens' : usage['completion_tokens']
         }

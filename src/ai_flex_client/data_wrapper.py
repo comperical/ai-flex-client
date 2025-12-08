@@ -1,14 +1,15 @@
 
 import json
-import utility as UTIL
 from typing import Any
+
+from . import utility as UTIL
 
 
 class DataWrapper:
 
-    def __init__(self, rjson):
-        assert type(rjson) == dict, f"Expected JSON data in dictionary form"
-        self.responsejson = rjson
+    def __init__(self, normal):
+        assert type(normal) == dict, f"Expected JSON data in dictionary form"
+        self.normal_form = normal
 
 
     def get_basic_text(self):
@@ -58,69 +59,3 @@ class DataWrapper:
 
 
 
-
-"""
-
-class SyntheticWrapper(OaiWrapper):
-
-
-    def __init__(self, rjson):
-        super().__init__(rjson)
-
-
-    # https://synthetic.new/pricing
-    def get_cost_pair(self, modelcode):
-
-
-        if "llama-v3p3" in modelcode:
-            return (0.90, 0.90)
-
-        if "gpt-oss-120b" in modelcode:
-            return (0.10, 0.10)
-
-        assert False, f"No cost info available for SYNTHETIC modelcode {modelcode}"
-
-
-
-
-class GeminiWrapper(ApiDataWrapper):
-
-
-    def __init__(self, rjson):
-        super().__init__(rjson)
-
-
-    def get_basic_text(self):
-
-        #print(json.dumps(firstcand['content']['parts'][0]['text'], indent=4, sort_keys=True))
-
-        candlist = self.responsejson['candidates']
-        firstcand = candlist[0]
-        return firstcand['content']['parts'][0]['text']
-
-
-    def compose_basic_metadata(self):
-
-        usage = self.responsejson['usage_metadata']
-
-        return {
-            'message_id' : None,
-            'model_family' : 'gemini',
-            'model_code' : self.responsejson['model_version'],
-            'input_tokens' : usage['prompt_token_count'],
-            'output_tokens' : usage['candidates_token_count']
-        }
-
-
-    # https://ai.google.dev/gemini-api/docs/pricing
-    def get_cost_pair(self, modelcode):
-
-        if modelcode.startswith(UTIL.GEMINI_20_FLASH):
-            return (0.10, 0.4)
-
-        if modelcode.startswith(UTIL.GEMINI_25_PRO):
-            return (1.25, 10)
-
-        assert False, f"No cost info available for modelcode {modelcode}"
-
-"""
