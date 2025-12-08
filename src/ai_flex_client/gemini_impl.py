@@ -62,7 +62,7 @@ def build_query():
 class GeminiQuery(BaseQuery):
 
     def __init__(self):
-        super().__init__()
+        super().__init__(GeminiWrapper)
         self.model_code = GEMINI_25_FLASH
 
 
@@ -87,9 +87,6 @@ class GeminiQuery(BaseQuery):
         self.od_run_query()
         return self.get_data_wrapper()
 
-
-    def get_wrapper_builder(self):
-        return GeminiWrapper
 
     def _sub_run_query(self):
 

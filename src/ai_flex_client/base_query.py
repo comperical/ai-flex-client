@@ -12,7 +12,7 @@ from . import utility as UTIL
 
 class BaseQuery:
 
-    def __init__(self):
+    def __init__(self, wrapper):
         
 
         # This is the JSON-ified form of the object returned by the endpoint
@@ -32,6 +32,8 @@ class BaseQuery:
 
         self.send_time_milli = None
         self.resp_time_milli = None
+
+        self.__wrap_builder = wrapper
 
 
     def is_complete(self):
@@ -58,14 +60,15 @@ class BaseQuery:
     def set_large_tier(self) -> "BaseQuery":
         assert False, "Subclass must override"
 
-    def get_wrapper_builder(self):
-        assert False, "Subclass must override"
-
     def get_data_wrapper(self) -> "DataWrapper":
-        builder = self.get_wrapper_builder()
         normal = self.get_normal_form()
         assert normal != None, "Response is not ready, you must run request"
-        return builder(normal)
+
+
+        wrapper = self.__wrap_builder(normal)
+        print(f"The Wrapper type is {type(wrapper)}, my type is {type(self)}")
+        #return self.__wrap_builder(normal)
+        return wrapper
 
     def with_max_token(self, mt) -> "BaseQuery":
         assert False, "Subclass must override, probably only allow this for ANTHRO queries"

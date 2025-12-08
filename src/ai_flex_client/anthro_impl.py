@@ -47,7 +47,7 @@ class AnthroQuery(BaseQuery):
 
     def __init__(self):
 
-        super().__init__()
+        super().__init__(AnthroWrapper)
         self.model_code = HAIKU_MODEL_CODE
         self.max_token = 8192
 
@@ -66,9 +66,6 @@ class AnthroQuery(BaseQuery):
     def set_medium_tier(self):
         self.model_code = SONNET_MODEL_CODE
         return self
-
-    def get_wrapper_builder(self):
-        return AnthroWrapper
 
 
     def _sub_run_query(self):

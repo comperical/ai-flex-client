@@ -49,7 +49,7 @@ def build_query():
 class OaiQuery(BaseQuery):
 
     def __init__(self):
-        super().__init__()
+        super().__init__(OaiWrapper)
         self.max_token = 8192
 
         self.set_small_tier()
@@ -76,10 +76,6 @@ class OaiQuery(BaseQuery):
     def set_medium_tier(self):
         self.model_code = GPT_5
         return self
-
-
-    def get_wrapper_builder(self):
-        return OaiWrapper
 
 
     def _sub_run_query(self):
