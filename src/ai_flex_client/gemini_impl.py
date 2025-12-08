@@ -62,13 +62,8 @@ def build_query():
 class GeminiQuery(BaseQuery):
 
     def __init__(self):
-        super().__init__(GeminiWrapper)
+        super().__init__()
         self.model_code = GEMINI_25_FLASH
-
-
-    def convert_response2_json(self):
-        assert self.response != None, "Response is null, you must generate it first or check before calling here"
-        return self.response.model_dump_json()
 
 
     def normalize_response(self, response):
@@ -82,6 +77,11 @@ class GeminiQuery(BaseQuery):
     def set_medium_tier(self):
         self.model_code = GEMINI_25_PRO
         return self
+
+
+    def get_wrapper_builder(self):
+        return GeminiWrapper
+
 
     def run_get_data(self):
         self.od_run_query()

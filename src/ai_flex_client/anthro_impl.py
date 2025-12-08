@@ -47,16 +47,12 @@ class AnthroQuery(BaseQuery):
 
     def __init__(self):
 
-        super().__init__(AnthroWrapper)
+        super().__init__()
         self.model_code = HAIKU_MODEL_CODE
         self.max_token = 8192
 
     def normalize_response(self, response):
         return json.loads(response.model_dump_json())
-
-    def convert_response2_json(self):
-        assert self.response != None, "Response is null, you must generate it first or check before calling here"
-        return self.response.model_dump_json()
 
 
     def set_small_tier(self):
@@ -67,6 +63,9 @@ class AnthroQuery(BaseQuery):
         self.model_code = SONNET_MODEL_CODE
         return self
 
+
+    def get_wrapper_builder(self):
+        return AnthroWrapper
 
     def _sub_run_query(self):
 

@@ -54,12 +54,8 @@ class SyntheticQuery(OAI_IMPL.OaiQuery):
         self.model_code = GPT_OSS_120B
 
 
-    # There is some kind of issue with the subclassing here,
-    # it is not getting the right wrapper from the constructor
-    def get_data_wrapper(self) -> "DataWrapper":
-        normal = self.get_normal_form()
-        assert normal != None, "Response is not ready, you must run request"
-        return SyntheticWrapper(normal)
+    def get_wrapper_builder(self):
+        return SyntheticWrapper
 
 
 

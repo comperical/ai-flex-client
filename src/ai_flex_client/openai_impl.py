@@ -49,7 +49,7 @@ def build_query():
 class OaiQuery(BaseQuery):
 
     def __init__(self):
-        super().__init__(OaiWrapper)
+        super().__init__()
         self.max_token = 8192
 
         self.set_small_tier()
@@ -62,11 +62,6 @@ class OaiQuery(BaseQuery):
     def normalize_response(self, response):
         return response.to_dict()
 
-    def convert_response2_json(self):
-        assert self.response != None, "Response is null, you must generate it first or check before calling here"
-        # Lots of issues here with pydantic versions...!!
-        return json.dumps(self.response.to_dict()) # type: ignore[arg-type]
-
 
     def set_small_tier(self):
         self.model_code = GPT_5_MINI
@@ -76,6 +71,10 @@ class OaiQuery(BaseQuery):
     def set_medium_tier(self):
         self.model_code = GPT_5
         return self
+
+
+    def get_wrapper_builder(self):
+        return OaiWrapper
 
 
     def _sub_run_query(self):
