@@ -18,6 +18,9 @@ def lookup_implementation(modelcode):
         from . import gemini_impl as GEMINI
         return GEMINI.GeminiQuery
 
+    if "grok" in modelcode:
+        from . import grok_impl as GROK
+        return GROK.GrokQuery
 
     # Gotcha, the gpt-oss-120b both starts with hf: and has "gpt" in the name
     if modelcode.startswith("hf:"):
