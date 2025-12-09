@@ -11,6 +11,8 @@ from .data_wrapper import DataWrapper
 
 GEMINI_25_FLASH = "gemini-2.5-flash"
 
+GEMINI_20_FLASH = "gemini-2.0-flash"
+
 GEMINI_25_PRO = "gemini-2.5-pro"
 
 IMPL_API_KEY = None

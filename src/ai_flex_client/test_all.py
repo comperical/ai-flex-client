@@ -4,6 +4,8 @@ from . import openai_impl as OAI
 from . import anthro_impl as ANTHRO
 from . import gemini_impl as GEMINI
 from . import synth_impl as SYNTH
+from . import grok_impl as GROK
+
 
 def run_simple_query(query):
 
@@ -18,7 +20,7 @@ def run_simple_query(query):
 def run_all_configured_test():
 
 
-    for impl in [OAI, ANTHRO, GEMINI, SYNTH]:
+    for impl in [OAI, ANTHRO, GEMINI, SYNTH, GROK]:
         if not impl.is_configured():
             continue
 
@@ -27,7 +29,7 @@ def run_all_configured_test():
 
 if __name__ == '__main__':
 
-    for impl in [OAI, ANTHRO, GEMINI, SYNTH]:
+    for impl in [OAI, ANTHRO, GEMINI, SYNTH, GROK]:
         impl.opt_register()
 
 
