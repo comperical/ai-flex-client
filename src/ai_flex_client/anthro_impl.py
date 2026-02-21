@@ -99,8 +99,12 @@ class AnthroWrapper(DataWrapper):
     # https://docs.claude.com/en/docs/about-claude/pricing
     def get_cost_pair(self, modelcode):
 
+
+        if modelcode.startswith("claude-opus"):
+            return (5, 25)
+
         if modelcode.startswith("claude-sonnet-4-5") or modelcode.startswith("claude-sonnet-4-6"):
-            return (3, 6)
+            return (3, 15)
 
         if modelcode.startswith("claude-3-7-sonnet") or modelcode.startswith("claude-3-5-sonnet"):
             return (3, 6)
