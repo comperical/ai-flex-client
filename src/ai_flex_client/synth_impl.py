@@ -82,6 +82,13 @@ class SyntheticWrapper(OAI_IMPL.OaiWrapper):
         if "llama-v3p3" in modelcode:
             return (0.90, 0.90)
 
+
+
+        if "Llama-3.3-70B" in modelcode:
+            return (0.88, 0.88)
+
+
+
         if "gpt-oss-120b" in modelcode:
             return (0.10, 0.10)
 
