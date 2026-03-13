@@ -77,7 +77,7 @@ class VeniceQuery(OAI.OaiQuery):
 class VeniceWrapper(OAI.OaiWrapper):
 
 
-    # https://openai.com/api/pricing/
+    # https://docs.venice.ai/models/overview
     def get_cost_pair(self, modelcode):
 
 
