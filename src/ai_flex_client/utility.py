@@ -14,15 +14,21 @@ def lookup_implementation(modelcode):
         from . import anthro_impl as ANTHRO
         return ANTHRO.AnthroQuery
 
+
     if "gemini" in modelcode:
         from . import gemini_impl as GEMINI
         return GEMINI.GeminiQuery
 
+
     if "venice" in modelcode:
+        from . import venice_impl as VENICE
         return VENICE.VeniceQuery
 
+
     if "glm" in modelcode:
+        from . import venice_impl as VENICE
         return VENICE.VeniceQuery
+
 
     if "grok" in modelcode:
         from . import grok_impl as GROK
