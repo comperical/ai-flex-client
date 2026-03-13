@@ -91,15 +91,3 @@ class VeniceWrapper(OAI.OaiWrapper):
         assert False, f"No cost info available for modelcode {modelcode}"
 
 
-    def compose_basic_metadata(self):
-
-        usage = self.normal_form['usage']
-
-        return {
-            'message_id' : self.normal_form['id'],
-            'model_family' : 'gpt',
-            'model_code' : self.normal_form['model'],
-            'input_tokens' : usage['prompt_tokens'],
-            'output_tokens' : usage['completion_tokens']
-        }
-
