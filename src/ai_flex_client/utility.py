@@ -18,6 +18,12 @@ def lookup_implementation(modelcode):
         from . import gemini_impl as GEMINI
         return GEMINI.GeminiQuery
 
+    if "venice" in modelcode:
+        return VENICE.VeniceQuery
+
+    if "glm" in modelcode:
+        return VENICE.VeniceQuery
+
     if "grok" in modelcode:
         from . import grok_impl as GROK
         return GROK.GrokQuery
