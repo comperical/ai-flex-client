@@ -108,7 +108,8 @@ class OaiWrapper(DataWrapper):
         if modelcode.startswith(GPT_5_MINI):
             return (0.25, 2)
 
-        assert False, f"No cost info available for modelcode {modelcode}"
+
+        return None
 
 
     def compose_basic_metadata(self):

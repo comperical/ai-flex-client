@@ -135,4 +135,4 @@ class GeminiWrapper(DataWrapper):
         if modelcode.startswith(GEMINI_25_PRO):
             return (1.25, 10)
 
-        assert False, f"No cost info available for modelcode {modelcode}"
+        return None

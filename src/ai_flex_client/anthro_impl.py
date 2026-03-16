@@ -116,4 +116,5 @@ class AnthroWrapper(DataWrapper):
             return (0.8, 1.6)
 
 
-        assert False, f"No cost info available for modelcode {modelcode}"
+        return None
+

@@ -91,4 +91,4 @@ class GrokWrapper(ANTHRO.AnthroWrapper):
         if modelcode == GROK_41_FAST_NO_REASON:
             return (0.2, 0.5)
 
-        assert False, f"No cost info available for modelcode {modelcode}"
+        return None

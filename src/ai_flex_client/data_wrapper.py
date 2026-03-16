@@ -34,7 +34,13 @@ class DataWrapper:
 
 
     def _compute_cost_dollar(self, usage):
-        icost, ocost = self.get_cost_pair(usage['model_code'])
+
+        costpair = self.get_cost_pair(usage['model_code'])
+        if costpair == None:
+            return None
+
+
+        icost, ocost = costpair
         itoken = usage['input_tokens'] / 1_000_000
         otoken = usage['output_tokens'] / 1_000_000
         return icost * itoken + ocost * otoken
