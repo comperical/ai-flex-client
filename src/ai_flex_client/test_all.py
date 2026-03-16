@@ -32,7 +32,7 @@ def run_all_configured_test(register=False):
         if not impl.is_configured():
             continue
 
-        run_simple_query(impl.build_query())
+        run_simple_query(impl.LlmQuery())
 
 
 def verify_model_registry():

@@ -30,11 +30,7 @@ opt_register = CONFIG.opt_register
 register_api_key = CONFIG.register_api_key
 
 
-def build_query():
-    return GeminiQuery()
-
-
-class GeminiQuery(BaseQuery):
+class LlmQuery(BaseQuery):
 
     _small_model = ModelName.GEMINI_2_5_FLASH
     _medium_model = ModelName.GEMINI_2_5_PRO
@@ -47,7 +43,7 @@ class GeminiQuery(BaseQuery):
         return json.loads(response.model_dump_json())
 
     def get_wrapper_builder(self):
-        return GeminiWrapper
+        return LlmResponseWrapper
 
     def _sub_run_query(self):
         assert self.messages is not None and len(self.messages) == 1, \
@@ -59,7 +55,7 @@ class GeminiQuery(BaseQuery):
         )
 
 
-class GeminiWrapper(DataWrapper):
+class LlmResponseWrapper(DataWrapper):
 
     def get_basic_text(self):
         return self.normal_form['candidates'][0]['content']['parts'][0]['text']

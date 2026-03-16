@@ -17,16 +17,12 @@ opt_register = CONFIG.opt_register
 register_api_key = CONFIG.register_api_key
 
 
-def build_query():
-    return SyntheticQuery()
-
-
-class SyntheticQuery(OAI.OaiQuery):
+class LlmQuery(OAI.LlmQuery):
 
     _small_model = ModelName.GPT_OSS_120B
 
     def get_wrapper_builder(self):
-        return OAI.OaiWrapper
+        return OAI.LlmResponseWrapper
 
     def _sub_run_query(self):
         assert self.model_code.startswith("hf:"), f"Expected to see hf:/ prefix here"

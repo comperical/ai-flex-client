@@ -17,17 +17,13 @@ opt_register = CONFIG.opt_register
 register_api_key = CONFIG.register_api_key
 
 
-def build_query():
-    return VeniceQuery()
-
-
-class VeniceQuery(OAI.OaiQuery):
+class LlmQuery(OAI.LlmQuery):
 
     _small_model = ModelName.VENICE_UNCENSORED
     _medium_model = ModelName.GLM_4_7
 
     def get_wrapper_builder(self):
-        return OAI.OaiWrapper
+        return OAI.LlmResponseWrapper
 
     def _sub_run_query(self):
         assert self.messages is not None, "You must initialize messages"

@@ -20,11 +20,7 @@ opt_register = CONFIG.opt_register
 register_api_key = CONFIG.register_api_key
 
 
-def build_query():
-    return AnthroQuery()
-
-
-class AnthroQuery(BaseQuery):
+class LlmQuery(BaseQuery):
 
     _small_model = ModelName.CLAUDE_HAIKU_4_5
     _medium_model = ModelName.CLAUDE_SONNET_4_5
@@ -38,7 +34,7 @@ class AnthroQuery(BaseQuery):
         return json.loads(response.model_dump_json())
 
     def get_wrapper_builder(self):
-        return AnthroWrapper
+        return LlmResponseWrapper
 
     def _sub_run_query(self):
         return CONFIG.get_client().messages.create(
@@ -48,7 +44,7 @@ class AnthroQuery(BaseQuery):
         )
 
 
-class AnthroWrapper(DataWrapper):
+class LlmResponseWrapper(DataWrapper):
 
     def get_basic_text(self):
         return self.normal_form["content"][0]["text"]

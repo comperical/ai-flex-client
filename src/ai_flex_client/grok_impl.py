@@ -17,17 +17,13 @@ opt_register = CONFIG.opt_register
 register_api_key = CONFIG.register_api_key
 
 
-def build_query():
-    return GrokQuery()
-
-
-class GrokQuery(ANTHRO.AnthroQuery):
+class LlmQuery(ANTHRO.LlmQuery):
 
     _small_model = ModelName.GROK_4_1_FAST
     _medium_model = ModelName.GROK_4_1_FAST_REASONING
 
     def get_wrapper_builder(self):
-        return ANTHRO.AnthroWrapper
+        return ANTHRO.LlmResponseWrapper
 
     def _sub_run_query(self):
         return CONFIG.get_client().messages.create(

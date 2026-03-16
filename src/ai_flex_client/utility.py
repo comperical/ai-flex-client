@@ -13,37 +13,37 @@ def lookup_implementation(modelcode):
 
     if "claude" in modelcode:
         from . import anthro_impl as ANTHRO
-        return ANTHRO.AnthroQuery
+        return ANTHRO.LlmQuery
 
 
     if "gemini" in modelcode:
         from . import gemini_impl as GEMINI
-        return GEMINI.GeminiQuery
+        return GEMINI.LlmQuery
 
 
     if "venice" in modelcode:
         from . import venice_impl as VENICE
-        return VENICE.VeniceQuery
+        return VENICE.LlmQuery
 
 
     if "glm" in modelcode:
         from . import venice_impl as VENICE
-        return VENICE.VeniceQuery
+        return VENICE.LlmQuery
 
 
     if "grok" in modelcode:
         from . import grok_impl as GROK
-        return GROK.GrokQuery
+        return GROK.LlmQuery
 
     # Gotcha, the gpt-oss-120b both starts with hf: and has "gpt" in the name
     if modelcode.startswith("hf:"):
         from . import synth_impl as SYNTH
-        return SYNTH.SyntheticQuery
+        return SYNTH.LlmQuery
 
     # Matches gpt-* models and o-series reasoning models (o3, o4-mini, etc.)
     if "gpt" in modelcode or modelcode.startswith("o"):
         from . import openai_impl as OAI
-        return OAI.OaiQuery
+        return OAI.LlmQuery
 
     assert False, f"Failed to find good implementation for model code {modelcode}"
 

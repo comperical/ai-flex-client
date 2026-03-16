@@ -19,11 +19,7 @@ opt_register = CONFIG.opt_register
 register_api_key = CONFIG.register_api_key
 
 
-def build_query():
-    return OaiQuery()
-
-
-class OaiQuery(BaseQuery):
+class LlmQuery(BaseQuery):
 
     _small_model = ModelName.GPT_5_MINI
     _medium_model = ModelName.GPT_5
@@ -37,7 +33,7 @@ class OaiQuery(BaseQuery):
         return response.to_dict()
 
     def get_wrapper_builder(self):
-        return OaiWrapper
+        return LlmResponseWrapper
 
     def _sub_run_query(self):
         assert self.messages is not None, "You must initialize messages"
@@ -48,7 +44,7 @@ class OaiQuery(BaseQuery):
         )
 
 
-class OaiWrapper(DataWrapper):
+class LlmResponseWrapper(DataWrapper):
 
     def get_basic_text(self):
         return self.normal_form["choices"][0]["message"]["content"]
