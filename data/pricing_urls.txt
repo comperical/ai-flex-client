@@ -1,0 +1,7 @@
+openai      https://openai.com/api/pricing/
+anthropic   https://www.anthropic.com/pricing
+anthropic   https://docs.claude.com/en/docs/about-claude/pricing
+gemini      https://ai.google.dev/gemini-api/docs/pricing
+grok        https://docs.x.ai/docs/models
+venice      https://docs.venice.ai/models/overview
+synthetic   https://synthetic.new/pricing
