@@ -77,15 +77,6 @@ class VeniceQuery(OAI.OaiQuery):
 class VeniceWrapper(OAI.OaiWrapper):
 
 
-    # https://docs.venice.ai/models/overview
-    def get_cost_pair(self, modelcode):
-
-        if modelcode == GLM_47:
-            return (0.55, 2.65)
-
-        if modelcode == VENICE_UNCENSORED:
-            return (0.2, 0.9)
-
-        return None
+    pass
 
 

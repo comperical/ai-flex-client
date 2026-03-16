@@ -29,18 +29,19 @@ class DataWrapper:
         assert False, "Subclasses must override"
 
 
-    def get_cost_pair(self, modelcode) -> tuple[float, float]:
-        assert False, "Subclasses must override"
-
-
     def _compute_cost_dollar(self, usage):
 
-        costpair = self.get_cost_pair(usage['model_code'])
-        if costpair == None:
+        registry = UTIL.get_registry()
+        result = registry.lookup_model(usage['model_code'])
+        if result is None:
             return None
 
+        _, info = result
+        icost = info['input_price']
+        ocost = info['output_price']
+        if icost is None or ocost is None:
+            return None
 
-        icost, ocost = costpair
         itoken = usage['input_tokens'] / 1_000_000
         otoken = usage['output_tokens'] / 1_000_000
         return icost * itoken + ocost * otoken

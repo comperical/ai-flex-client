@@ -82,13 +82,4 @@ class GrokQuery(ANTHRO.AnthroQuery):
 class GrokWrapper(ANTHRO.AnthroWrapper):
 
 
-    # https://docs.x.ai/docs/models
-    def get_cost_pair(self, modelcode):
-
-        if modelcode == GROK_41_FAST_REASONING:
-            return (0.2, 0.5)
-
-        if modelcode == GROK_41_FAST_NO_REASON:
-            return (0.2, 0.5)
-
-        return None
+    pass

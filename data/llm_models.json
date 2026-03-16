@@ -2,50 +2,62 @@
 
   "openai": {
     "gpt-5.4": {
+      "display": "GPT-5.4",
       "input_price": 2.50,
       "output_price": 15.00
     },
     "gpt-5.4-pro": {
+      "display": "GPT-5.4 Pro",
       "input_price": 30.00,
       "output_price": 180.00
     },
     "gpt-5-2025-08-07": {
+      "display": "GPT-5",
       "input_price": 1.25,
       "output_price": 10.00
     },
     "gpt-5-mini": {
+      "display": "GPT-5 Mini",
       "input_price": 0.25,
       "output_price": 2.00
     },
     "gpt-4.1": {
+      "display": "GPT-4.1",
       "input_price": 3.00,
       "output_price": 12.00
     },
     "gpt-4.1-mini": {
+      "display": "GPT-4.1 Mini",
       "input_price": 0.80,
       "output_price": 3.20
     },
     "gpt-4.1-nano": {
+      "display": "GPT-4.1 Nano",
       "input_price": 0.20,
       "output_price": 0.80
     },
     "gpt-4o": {
+      "display": "GPT-4o",
       "input_price": 2.50,
       "output_price": 10.00
     },
     "gpt-4o-mini": {
+      "display": "GPT-4o Mini",
       "input_price": 0.15,
       "output_price": 0.60
     },
     "o4-mini": {
+      "display": "o4 Mini",
       "input_price": 4.00,
       "output_price": 16.00
     },
     "o3": {
+      "display": "o3",
       "input_price": 2.00,
       "output_price": 8.00
     },
     "o3-mini": {
+      "display": "o3 Mini",
       "input_price": 1.10,
       "output_price": 4.40
     }
@@ -53,34 +65,42 @@
 
   "anthropic": {
     "claude-opus-4-6": {
+      "display": "Claude Opus 4.6",
       "input_price": 5.00,
       "output_price": 25.00
     },
     "claude-sonnet-4-6": {
+      "display": "Claude Sonnet 4.6",
       "input_price": 3.00,
       "output_price": 15.00
     },
     "claude-haiku-4-5-20251001": {
+      "display": "Claude Haiku 4.5",
       "input_price": 1.00,
       "output_price": 5.00
     },
     "claude-opus-4-5-20251101": {
+      "display": "Claude Opus 4.5",
       "input_price": 5.00,
       "output_price": 25.00
     },
     "claude-sonnet-4-5-20250929": {
+      "display": "Claude Sonnet 4.5",
       "input_price": 3.00,
       "output_price": 15.00
     },
     "claude-opus-4-1-20250805": {
+      "display": "Claude Opus 4.1",
       "input_price": 15.00,
       "output_price": 75.00
     },
     "claude-sonnet-4-20250514": {
+      "display": "Claude Sonnet 4",
       "input_price": 3.00,
       "output_price": 15.00
     },
     "claude-opus-4-20250514": {
+      "display": "Claude Opus 4",
       "input_price": 15.00,
       "output_price": 75.00
     }
@@ -88,26 +108,32 @@
 
   "gemini": {
     "gemini-3.1-pro-preview": {
+      "display": "Gemini 3.1 Pro Preview",
       "input_price": 2.00,
       "output_price": 12.00
     },
     "gemini-3.1-flash-lite-preview": {
+      "display": "Gemini 3.1 Flash Lite Preview",
       "input_price": 0.25,
       "output_price": 1.50
     },
     "gemini-3-flash-preview": {
+      "display": "Gemini 3 Flash Preview",
       "input_price": 0.50,
       "output_price": 3.00
     },
     "gemini-2.5-pro": {
+      "display": "Gemini 2.5 Pro",
       "input_price": 1.25,
       "output_price": 10.00
     },
     "gemini-2.5-flash": {
+      "display": "Gemini 2.5 Flash",
       "input_price": 0.30,
       "output_price": 2.50
     },
     "gemini-2.5-flash-lite": {
+      "display": "Gemini 2.5 Flash Lite",
       "input_price": 0.10,
       "output_price": 0.40
     }
@@ -115,34 +141,42 @@
 
   "grok": {
     "grok-4.20-beta-0309-reasoning": {
+      "display": "Grok 4.20 Reasoning",
       "input_price": 2.00,
       "output_price": 6.00
     },
     "grok-4.20-beta-0309-non-reasoning": {
+      "display": "Grok 4.20",
       "input_price": 2.00,
       "output_price": 6.00
     },
     "grok-4-0709": {
+      "display": "Grok 4",
       "input_price": 3.00,
       "output_price": 15.00
     },
     "grok-4-1-fast-reasoning": {
+      "display": "Grok 4.1 Fast Reasoning",
       "input_price": 0.20,
       "output_price": 0.50
     },
     "grok-4-1-fast-non-reasoning": {
+      "display": "Grok 4.1 Fast",
       "input_price": 0.20,
       "output_price": 0.50
     },
     "grok-code-fast-1": {
+      "display": "Grok Code Fast",
       "input_price": 0.20,
       "output_price": 1.50
     },
     "grok-3": {
+      "display": "Grok 3",
       "input_price": 3.00,
       "output_price": 15.00
     },
     "grok-3-mini": {
+      "display": "Grok 3 Mini",
       "input_price": 0.30,
       "output_price": 0.50
     }
@@ -150,18 +184,22 @@
 
   "venice": {
     "venice-uncensored": {
+      "display": "Venice Uncensored",
       "input_price": 0.20,
       "output_price": 0.90
     },
     "zai-org-glm-4.7": {
+      "display": "GLM 4.7",
       "input_price": 0.55,
       "output_price": 2.65
     },
     "zai-org-glm-4.7-flash": {
+      "display": "GLM 4.7 Flash",
       "input_price": 0.13,
       "output_price": 0.50
     },
     "zai-org-glm-5": {
+      "display": "GLM 5",
       "input_price": 1.00,
       "output_price": 3.20
     }
@@ -169,50 +207,62 @@
 
   "synthetic": {
     "hf:openai/gpt-oss-120b": {
+      "display": "GPT-OSS 120B",
       "input_price": 0.10,
       "output_price": 0.10
     },
     "hf:meta-llama/Llama-3.3-70B-Instruct": {
+      "display": "Llama 3.3 70B Instruct",
       "input_price": 0.88,
       "output_price": 0.88
     },
     "hf:deepseek-ai/DeepSeek-R1-0528": {
+      "display": "DeepSeek R1",
       "input_price": 3.00,
       "output_price": 8.00
     },
     "hf:deepseek-ai/DeepSeek-V3": {
+      "display": "DeepSeek V3",
       "input_price": 1.25,
       "output_price": 1.25
     },
     "hf:deepseek-ai/DeepSeek-V3.2": {
+      "display": "DeepSeek V3.2",
       "input_price": 0.56,
       "output_price": 1.68
     },
     "hf:Qwen/Qwen3-235B-A22B-Thinking-2507": {
+      "display": "Qwen 3 235B Thinking",
       "input_price": 0.65,
       "output_price": 3.00
     },
     "hf:Qwen/Qwen3-Coder-480B-A35B-Instruct": {
+      "display": "Qwen 3 Coder 480B",
       "input_price": 2.00,
       "output_price": 2.00
     },
     "hf:Qwen/Qwen3.5-397B-A17B": {
+      "display": "Qwen 3.5 397B",
       "input_price": 0.60,
       "output_price": 3.60
     },
     "hf:zai-org/GLM-4.7": {
+      "display": "GLM 4.7 (Synthetic)",
       "input_price": 0.55,
       "output_price": 2.19
     },
     "hf:zai-org/GLM-4.7-Flash": {
+      "display": "GLM 4.7 Flash (Synthetic)",
       "input_price": 0.06,
       "output_price": 0.40
     },
     "hf:MiniMaxAI/MiniMax-M2.5": {
+      "display": "MiniMax M2.5",
       "input_price": 0.60,
       "output_price": 3.00
     },
     "hf:moonshotai/Kimi-K2.5": {
+      "display": "Kimi K2.5",
       "input_price": 0.60,
       "output_price": 3.00
     }

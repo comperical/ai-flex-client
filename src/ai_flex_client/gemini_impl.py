@@ -126,13 +126,3 @@ class GeminiWrapper(DataWrapper):
         }
 
 
-    # https://ai.google.dev/gemini-api/docs/pricing
-    def get_cost_pair(self, modelcode):
-
-        if modelcode.startswith(GEMINI_25_FLASH):
-            return (0.10, 0.4)
-
-        if modelcode.startswith(GEMINI_25_PRO):
-            return (1.25, 10)
-
-        return None

@@ -95,26 +95,4 @@ class AnthroWrapper(DataWrapper):
         }
 
 
-    # https://www.anthropic.com/pricing
-    # https://docs.claude.com/en/docs/about-claude/pricing
-    def get_cost_pair(self, modelcode):
-
-
-        if modelcode.startswith("claude-opus"):
-            return (5, 25)
-
-        if modelcode.startswith("claude-sonnet-4-5") or modelcode.startswith("claude-sonnet-4-6"):
-            return (3, 15)
-
-        if modelcode.startswith("claude-3-7-sonnet") or modelcode.startswith("claude-3-5-sonnet"):
-            return (3, 6)
-
-        if modelcode.startswith("claude-haiku-4-5"):
-            return (1, 2)
-
-        if modelcode.startswith("claude-3-5-haiku"):
-            return (0.8, 1.6)
-
-
-        return None
 

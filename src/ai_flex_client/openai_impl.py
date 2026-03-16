@@ -96,22 +96,6 @@ class OaiWrapper(DataWrapper):
         return self.normal_form["choices"][0]["message"]["content"]
 
 
-    # https://openai.com/api/pricing/
-    def get_cost_pair(self, modelcode):
-
-        if modelcode.startswith(GPT4O_MINI):
-            return (0.15, 0.6)
-
-        if modelcode.startswith(GPT_4O):
-            return (2.5, 10)
-
-        if modelcode.startswith(GPT_5_MINI):
-            return (0.25, 2)
-
-
-        return None
-
-
     def compose_basic_metadata(self):
 
         usage = self.normal_form['usage']
