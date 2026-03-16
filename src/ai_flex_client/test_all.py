@@ -34,10 +34,34 @@ def run_all_configured_test(register=False):
         run_simple_query(impl.build_query())
 
 
+def verify_model_registry():
+
+    from .model_name import ModelName
+    from . import utility as UTIL
+
+    registry = UTIL.get_registry()
+    failures = []
+
+    for model in ModelName:
+        result = registry.lookup_model(model.value)
+        if result is None:
+            failures.append(model)
+        else:
+            provider, info = result
+            print(f"  OK: {model.name:30s} -> {provider:12s} {info['display']}")
+
+    if failures:
+        names = ", ".join(m.name for m in failures)
+        raise AssertionError(f"Models not found in registry: {names}")
+
+    print(f"\nAll {len(ModelName)} model names verified in registry")
+
+
 if __name__ == '__main__':
 
-    for impl in  ALL_IMPL:
-        impl.opt_register()
+    verify_model_registry()
 
+    for impl in ALL_IMPL:
+        impl.opt_register()
 
     run_all_configured_test()
