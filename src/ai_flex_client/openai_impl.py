@@ -1,38 +1,22 @@
 
-import os
-import json
-import functools
 
-from . import utility as UTIL
 from .base_query import BaseQuery
 from .data_wrapper import DataWrapper
 from .model_name import ModelName
-
-IMPL_API_KEY = None
-
-ENVIRON_VAR_NAME = "OPENAI_API_KEY"
-
-def is_configured():
-    return IMPL_API_KEY != None
-
-def register_api_key(apikey):
-    global IMPL_API_KEY
-    IMPL_API_KEY = apikey
+from .provider_config import ProviderConfig
 
 
-def register_key_from_environment():
-    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key)
-
-def opt_register():
-    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key, missingokay=True)
-
-
-
-@functools.lru_cache(maxsize=1)
-def get_client():
+def _make_client(api_key):
     from openai import OpenAI
-    assert IMPL_API_KEY != None, f"You must register an API key before calling"
-    return OpenAI(api_key=IMPL_API_KEY)
+    return OpenAI(api_key=api_key)
+
+
+CONFIG = ProviderConfig("OPENAI_API_KEY", _make_client)
+
+# Module-level API for backwards compatibility
+is_configured = CONFIG.is_configured
+opt_register = CONFIG.opt_register
+register_api_key = CONFIG.register_api_key
 
 
 def build_query():
@@ -41,58 +25,36 @@ def build_query():
 
 class OaiQuery(BaseQuery):
 
+    _small_model = ModelName.GPT_5_MINI
+    _medium_model = ModelName.GPT_5
+
     def __init__(self):
         super().__init__()
         self.max_token = 8192
-
         self.set_small_tier()
-
-    def run_get_data(self):
-        self.od_run_query()
-        return self.get_data_wrapper()
-
 
     def normalize_response(self, response):
         return response.to_dict()
 
-
-    def set_small_tier(self):
-        self.model_code = ModelName.GPT_5_MINI.code
-        return self
-
-
-    def set_medium_tier(self):
-        self.model_code = ModelName.GPT_5.code
-        return self
-
-
     def get_wrapper_builder(self):
         return OaiWrapper
 
-
     def _sub_run_query(self):
-
         assert self.messages is not None, "You must initialize messages"
-
-        return get_client().chat.completions.create(
+        return CONFIG.get_client().chat.completions.create(
             model=self.model_code,
-            messages=self.messages, # type: ignore[arg-type]
+            messages=self.messages,
             max_completion_tokens=self.max_token
         )
 
 
-
 class OaiWrapper(DataWrapper):
-
 
     def get_basic_text(self):
         return self.normal_form["choices"][0]["message"]["content"]
 
-
     def compose_basic_metadata(self):
-
         usage = self.normal_form['usage']
-
         return {
             'message_id' : self.normal_form['id'],
             'model_family' : 'gpt',
@@ -100,4 +62,3 @@ class OaiWrapper(DataWrapper):
             'input_tokens' : usage['prompt_tokens'],
             'output_tokens' : usage['completion_tokens']
         }
-

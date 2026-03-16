@@ -15,9 +15,11 @@ class ModelName(Enum):
     GPT_4_1_NANO        = auto()
     GPT_4O              = auto()
     GPT_4O_MINI         = auto()
-    O4_MINI             = auto()
-    O3                  = auto()
-    O3_MINI             = auto()
+    # OpenAI o-series reasoning models: prefixed with GPT_ so that
+    # lookup_implementation can route them via the "gpt" substring
+    GPT_O4_MINI         = auto()
+    GPT_O3              = auto()
+    GPT_O3_MINI         = auto()
 
     # Anthropic
     CLAUDE_OPUS_4_6     = auto()

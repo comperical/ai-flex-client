@@ -1,80 +1,37 @@
 
-import os
-import json
-import functools
 
-from . import utility as UTIL
 from . import anthro_impl as ANTHRO
-from .base_query import BaseQuery
-from .data_wrapper import DataWrapper
 from .model_name import ModelName
+from .provider_config import ProviderConfig
 
 
-IMPL_API_KEY = None
-
-ENVIRON_VAR_NAME = "GROK_API_KEY"
-
-def is_configured():
-    return IMPL_API_KEY != None
-
-def register_api_key(apikey):
-    global IMPL_API_KEY
-    IMPL_API_KEY = apikey
-
-
-def register_key_from_environment():
-    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key)
-
-
-def opt_register():
-    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key, missingokay=True)
-
-
-@functools.lru_cache(maxsize=1)
-def get_client():
+def _make_client(api_key):
     import anthropic
-    return anthropic.Client(api_key=IMPL_API_KEY, base_url="https://api.x.ai")
+    return anthropic.Client(api_key=api_key, base_url="https://api.x.ai")
+
+
+CONFIG = ProviderConfig("GROK_API_KEY", _make_client)
+
+is_configured = CONFIG.is_configured
+opt_register = CONFIG.opt_register
+register_api_key = CONFIG.register_api_key
 
 
 def build_query():
     return GrokQuery()
 
 
-
-# Grok's API is compatible with Anthropic's, so we use the Anthro library
 class GrokQuery(ANTHRO.AnthroQuery):
 
-    def __init__(self):
-
-        super().__init__()
-        self.model_code = ModelName.GROK_4_1_FAST.code
-        self.max_token = 8192
-
-
-    def set_small_tier(self):
-        self.model_code = ModelName.GROK_4_1_FAST.code
-        return self
-
-    def set_medium_tier(self):
-        self.model_code = ModelName.GROK_4_1_FAST_REASONING.code
-        return self
-
+    _small_model = ModelName.GROK_4_1_FAST
+    _medium_model = ModelName.GROK_4_1_FAST_REASONING
 
     def get_wrapper_builder(self):
-        return GrokWrapper
-
+        return ANTHRO.AnthroWrapper
 
     def _sub_run_query(self):
-
-        return get_client().messages.create(
+        return CONFIG.get_client().messages.create(
             model=self.model_code,
             max_tokens=self.max_token,
-            messages=self.messages # type: ignore[arg-type]
+            messages=self.messages
         )
-
-
-
-class GrokWrapper(ANTHRO.AnthroWrapper):
-
-
-    pass

@@ -12,6 +12,11 @@ from . import utility as UTIL
 
 class BaseQuery:
 
+    # Class-level attributes: subclasses override with ModelName enum values
+    # to define which models to use for each tier
+    _small_model = None
+    _medium_model = None
+
     def __init__(self):
         
 
@@ -69,13 +74,14 @@ class BaseQuery:
 
 
     def set_small_tier(self) -> "BaseQuery":
-        assert False, "Subclass must override"
+        assert self._small_model is not None, f"No small tier defined for {type(self).__name__}"
+        self.model_code = self._small_model.code
+        return self
 
     def set_medium_tier(self) -> "BaseQuery":
-        assert False, "Subclass must override"
-
-    def set_large_tier(self) -> "BaseQuery":
-        assert False, "Subclass must override"
+        assert self._medium_model is not None, f"No medium tier defined for {type(self).__name__}"
+        self.model_code = self._medium_model.code
+        return self
 
 
     def get_wrapper_builder(self):

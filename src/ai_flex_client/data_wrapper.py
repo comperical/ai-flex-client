@@ -32,19 +32,16 @@ class DataWrapper:
     def _compute_cost_dollar(self, usage):
 
         registry = UTIL.get_registry()
-        result = registry.lookup_model(usage['model_code'])
-        if result is None:
+        model_info = registry.lookup_model(usage['model_code'])
+        if model_info is None:
             return None
 
-        _, info = result
-        icost = info['input_price']
-        ocost = info['output_price']
-        if icost is None or ocost is None:
+        if model_info.input_price is None or model_info.output_price is None:
             return None
 
         itoken = usage['input_tokens'] / 1_000_000
         otoken = usage['output_tokens'] / 1_000_000
-        return icost * itoken + ocost * otoken
+        return model_info.input_price * itoken + model_info.output_price * otoken
 
 
     def get_cost_dollar(self):

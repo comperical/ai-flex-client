@@ -1,5 +1,6 @@
 
 
+from . import utility as UTIL
 from . import openai_impl as OAI
 from . import anthro_impl as ANTHRO
 from . import gemini_impl as GEMINI
@@ -44,12 +45,11 @@ def verify_model_registry():
 
     for model in ModelName:
         code = model.code
-        result = registry.lookup_model(code)
-        if result is None:
+        info = registry.lookup_model(code)
+        if info is None:
             failures.append(model)
         else:
-            provider, info = result
-            print(f"  OK: {model.name:30s} -> {provider:12s} {info['display']}")
+            print(f"  OK: {model.name:30s} -> {info.provider:12s} {info.display}")
 
     if failures:
         names = ", ".join(m.name for m in failures)
@@ -58,9 +58,32 @@ def verify_model_registry():
     print(f"\nAll {len(ModelName)} model names verified in registry")
 
 
+def verify_lookup_implementation():
+
+    from .model_name import ModelName
+
+    failures = []
+
+    for model in ModelName:
+        code = model.code
+        try:
+            query_class = UTIL.lookup_implementation(code)
+            print(f"  OK: {model.name:30s} -> {query_class.__name__}")
+        except AssertionError:
+            failures.append(model)
+            print(f"  FAIL: {model.name:30s} ({code})")
+
+    if failures:
+        names = ", ".join(m.name for m in failures)
+        raise AssertionError(f"No implementation found for: {names}")
+
+    print(f"\nAll {len(ModelName)} model names resolved to implementations")
+
+
 if __name__ == '__main__':
 
     verify_model_registry()
+    verify_lookup_implementation()
 
     for impl in ALL_IMPL:
         impl.opt_register()

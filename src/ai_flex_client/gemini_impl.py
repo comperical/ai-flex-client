@@ -1,96 +1,59 @@
 
 
-import os
 import json
-import functools
 
-from . import utility as UTIL
 from .base_query import BaseQuery
 from .data_wrapper import DataWrapper
 from .model_name import ModelName
-
-IMPL_API_KEY = None
-
-ENVIRON_VAR_NAME = "GEMINI_API_KEY"
-
-def is_configured():
-    return IMPL_API_KEY != None
-
-def register_api_key(apikey):
-    global IMPL_API_KEY
-    IMPL_API_KEY = apikey
+from .provider_config import ProviderConfig
 
 
-def register_key_from_environment():
-    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key)
-
-def opt_register():
-    UTIL.lookup_register(ENVIRON_VAR_NAME, register_api_key, missingokay=True)
-
-
-
-
-@functools.lru_cache(maxsize=1)
-def get_client():
-
+def _make_client(api_key):
     import asyncio
     from google import genai
 
-    # Issue here is that genai wants to do asyncio, but
-    # Flask does not allow this by default. So we have to do some
-    # incantations to get it to run in the Flask app
+    # genai wants asyncio, but Flask does not allow this by default
     try:
-        return genai.Client(api_key=IMPL_API_KEY)
+        return genai.Client(api_key=api_key)
     except RuntimeError as e:
         if "no current event loop" in str(e).lower():
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            return genai.Client(api_key=IMPL_API_KEY)
-        raise  # If another error occurs, re-raise it
+            return genai.Client(api_key=api_key)
+        raise
 
+
+CONFIG = ProviderConfig("GEMINI_API_KEY", _make_client)
+
+is_configured = CONFIG.is_configured
+opt_register = CONFIG.opt_register
+register_api_key = CONFIG.register_api_key
 
 
 def build_query():
     return GeminiQuery()
 
 
-
 class GeminiQuery(BaseQuery):
+
+    _small_model = ModelName.GEMINI_2_5_FLASH
+    _medium_model = ModelName.GEMINI_2_5_PRO
 
     def __init__(self):
         super().__init__()
-        self.model_code = ModelName.GEMINI_2_5_FLASH.code
-
+        self.set_small_tier()
 
     def normalize_response(self, response):
         return json.loads(response.model_dump_json())
 
-    def set_small_tier(self):
-        self.model_code = ModelName.GEMINI_2_5_FLASH.code
-        return self
-
-
-    def set_medium_tier(self):
-        self.model_code = ModelName.GEMINI_2_5_PRO.code
-        return self
-
-
     def get_wrapper_builder(self):
         return GeminiWrapper
 
-
-    def run_get_data(self):
-        self.od_run_query()
-        return self.get_data_wrapper()
-
-
     def _sub_run_query(self):
-
-        # Annoying issue here where Gemini can only handle a single message
-        assert self.messages != None and len(self.messages) == 1, "Currently Gemini can only handle single outbound message"
+        assert self.messages is not None and len(self.messages) == 1, \
+            "Currently Gemini can only handle single outbound message"
         singlemssg = self.messages[0]['content']
-
-        return get_client().models.generate_content(
+        return CONFIG.get_client().models.generate_content(
             model=self.model_code,
             contents=singlemssg
         )
@@ -99,18 +62,10 @@ class GeminiQuery(BaseQuery):
 class GeminiWrapper(DataWrapper):
 
     def get_basic_text(self):
-
-        #print(json.dumps(firstcand['content']['parts'][0]['text'], indent=4, sort_keys=True))
-
-        candlist = self.normal_form['candidates']
-        firstcand = candlist[0]
-        return firstcand['content']['parts'][0]['text']
-
+        return self.normal_form['candidates'][0]['content']['parts'][0]['text']
 
     def compose_basic_metadata(self):
-
         usage = self.normal_form['usage_metadata']
-
         return {
             'message_id' : None,
             'model_family' : 'gemini',
@@ -118,5 +73,3 @@ class GeminiWrapper(DataWrapper):
             'input_tokens' : usage['prompt_token_count'],
             'output_tokens' : usage['candidates_token_count']
         }
-
-

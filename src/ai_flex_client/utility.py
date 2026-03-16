@@ -40,7 +40,8 @@ def lookup_implementation(modelcode):
         from . import synth_impl as SYNTH
         return SYNTH.SyntheticQuery
 
-    if "gpt" in modelcode:
+    # Matches gpt-* models and o-series reasoning models (o3, o4-mini, etc.)
+    if "gpt" in modelcode or modelcode.startswith("o"):
         from . import openai_impl as OAI
         return OAI.OaiQuery
 
