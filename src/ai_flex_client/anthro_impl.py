@@ -6,10 +6,7 @@ import functools
 from . import utility as UTIL
 from .base_query import BaseQuery
 from .data_wrapper import DataWrapper
-
-SONNET_MODEL_CODE = "claude-sonnet-4-5-20250929"
-
-HAIKU_MODEL_CODE = "claude-haiku-4-5-20251001"
+from .model_name import ModelName
 
 IMPL_API_KEY = None
 
@@ -48,7 +45,7 @@ class AnthroQuery(BaseQuery):
     def __init__(self):
 
         super().__init__()
-        self.model_code = HAIKU_MODEL_CODE
+        self.model_code = ModelName.CLAUDE_HAIKU_4_5.code
         self.max_token = 8192
 
     def normalize_response(self, response):
@@ -56,11 +53,11 @@ class AnthroQuery(BaseQuery):
 
 
     def set_small_tier(self):
-        self.model_code = HAIKU_MODEL_CODE
+        self.model_code = ModelName.CLAUDE_HAIKU_4_5.code
         return self
 
     def set_medium_tier(self):
-        self.model_code = SONNET_MODEL_CODE
+        self.model_code = ModelName.CLAUDE_SONNET_4_5.code
         return self
 
 

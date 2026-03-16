@@ -7,12 +7,7 @@ from . import utility as UTIL
 from . import anthro_impl as ANTHRO
 from .base_query import BaseQuery
 from .data_wrapper import DataWrapper
-
-
-
-GROK_41_FAST_NO_REASON = "grok-4-1-fast-non-reasoning"
-
-GROK_41_FAST_REASONING = "grok-4-1-fast-reasoning"
+from .model_name import ModelName
 
 
 IMPL_API_KEY = None
@@ -52,16 +47,16 @@ class GrokQuery(ANTHRO.AnthroQuery):
     def __init__(self):
 
         super().__init__()
-        self.model_code = GROK_41_FAST_NO_REASON
+        self.model_code = ModelName.GROK_4_1_FAST.code
         self.max_token = 8192
 
 
     def set_small_tier(self):
-        self.model_code = GROK_41_FAST_NO_REASON
+        self.model_code = ModelName.GROK_4_1_FAST.code
         return self
 
     def set_medium_tier(self):
-        self.model_code = GROK_41_FAST_REASONING
+        self.model_code = ModelName.GROK_4_1_FAST_REASONING.code
         return self
 
 

@@ -40,5 +40,12 @@ class ModelRegistry:
                 return provider, models[model_code]
         return None
 
+    def lookup_by_enum_name(self, enum_name):
+        for provider, models in self._data.items():
+            for code, info in models.items():
+                if info.get("enum_name") == enum_name:
+                    return code
+        assert False, f"No model found with enum_name '{enum_name}'"
+
 
 

@@ -43,7 +43,8 @@ def verify_model_registry():
     failures = []
 
     for model in ModelName:
-        result = registry.lookup_model(model.value)
+        code = model.code
+        result = registry.lookup_model(code)
         if result is None:
             failures.append(model)
         else:

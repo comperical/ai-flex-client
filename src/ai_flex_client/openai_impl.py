@@ -6,14 +6,7 @@ import functools
 from . import utility as UTIL
 from .base_query import BaseQuery
 from .data_wrapper import DataWrapper
-
-GPT_4O = "gpt-4o"
-
-GPT4O_MINI = "gpt-4o-mini"
-
-GPT_5 = "gpt-5-2025-08-07"
-
-GPT_5_MINI = "gpt-5-mini"
+from .model_name import ModelName
 
 IMPL_API_KEY = None
 
@@ -64,12 +57,12 @@ class OaiQuery(BaseQuery):
 
 
     def set_small_tier(self):
-        self.model_code = GPT_5_MINI
+        self.model_code = ModelName.GPT_5_MINI.code
         return self
 
 
     def set_medium_tier(self):
-        self.model_code = GPT_5
+        self.model_code = ModelName.GPT_5.code
         return self
 
 

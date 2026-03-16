@@ -7,13 +7,7 @@ import functools
 from . import utility as UTIL
 from .base_query import BaseQuery
 from .data_wrapper import DataWrapper
-
-
-GEMINI_25_FLASH = "gemini-2.5-flash"
-
-GEMINI_20_FLASH = "gemini-2.0-flash"
-
-GEMINI_25_PRO = "gemini-2.5-pro"
+from .model_name import ModelName
 
 IMPL_API_KEY = None
 
@@ -65,19 +59,19 @@ class GeminiQuery(BaseQuery):
 
     def __init__(self):
         super().__init__()
-        self.model_code = GEMINI_25_FLASH
+        self.model_code = ModelName.GEMINI_2_5_FLASH.code
 
 
     def normalize_response(self, response):
         return json.loads(response.model_dump_json())
 
     def set_small_tier(self):
-        self.model_code = GEMINI_25_FLASH
+        self.model_code = ModelName.GEMINI_2_5_FLASH.code
         return self
 
 
     def set_medium_tier(self):
-        self.model_code = GEMINI_25_PRO
+        self.model_code = ModelName.GEMINI_2_5_PRO.code
         return self
 
 

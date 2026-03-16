@@ -5,14 +5,11 @@ import functools
 
 from . import utility as UTIL
 from . import openai_impl as OAI
+from .model_name import ModelName
 
 IMPL_API_KEY = None
 
 ENVIRON_VAR_NAME = "VENICE_API_KEY"
-
-VENICE_UNCENSORED = "venice-uncensored"
-
-GLM_47 = "zai-org-glm-4.7"
 
 def is_configured():
     return IMPL_API_KEY != None
@@ -50,12 +47,12 @@ class VeniceQuery(OAI.OaiQuery):
 
 
     def set_small_tier(self):
-        self.model_code = VENICE_UNCENSORED
+        self.model_code = ModelName.VENICE_UNCENSORED.code
         return self
 
 
     def set_medium_tier(self):
-        self.model_code = GLM_47
+        self.model_code = ModelName.GLM_4_7.code
         return self
 
     def get_wrapper_builder(self):

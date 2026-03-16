@@ -7,13 +7,9 @@ import functools
 from . import utility as UTIL
 from .base_query import BaseQuery
 from .data_wrapper import DataWrapper
-
+from .model_name import ModelName
 
 from . import openai_impl as OAI_IMPL
-
-GPT_OSS_120B = "hf:openai/gpt-oss-120b"
-
-META_LLAMA_70B_INSTRUCT = "hf:meta-llama/Llama-3.3-70B-Instruct"
 
 IMPL_API_KEY = None
 
@@ -51,7 +47,7 @@ class SyntheticQuery(OAI_IMPL.OaiQuery):
     def __init__(self):
         super().__init__()
 
-        self.model_code = GPT_OSS_120B
+        self.model_code = ModelName.GPT_OSS_120B.code
 
 
     def get_wrapper_builder(self):
