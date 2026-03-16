@@ -48,8 +48,8 @@ def lookup_implementation(modelcode):
     assert False, f"Failed to find good implementation for model code {modelcode}"
 
 
-# Path to the data/ directory at the repo root, sibling of src/
-_DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
+# Path to the data/ directory inside the package
+_DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
 # JSON file with per-model pricing info for all providers
 _MODEL_JSON_PATH = os.path.join(_DATA_DIR, "llm_models.json")

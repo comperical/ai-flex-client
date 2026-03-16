@@ -5,3 +5,6 @@ gemini      https://ai.google.dev/gemini-api/docs/pricing
 grok        https://docs.x.ai/docs/models
 venice      https://docs.venice.ai/models/overview
 synthetic   https://synthetic.new/pricing
+
+
+
