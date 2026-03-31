@@ -26,7 +26,7 @@ def lookup_implementation(modelcode):
         return VENICE.LlmQuery
 
 
-    if "glm" in modelcode:
+    if "glm" in modelcode or "qwen" in modelcode or "e2ee" in modelcode:
         from . import venice_impl as VENICE
         return VENICE.LlmQuery
 
