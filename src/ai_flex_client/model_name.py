@@ -65,6 +65,8 @@ class ModelName(Enum):
     E2EE_QWEN3_30B      = auto()
     E2EE_QWEN3_VL_30B   = auto()
     E2EE_QWEN3_5_122B   = auto()
+    GEMMA_4_26B          = auto()
+    GEMMA_4_31B          = auto()
 
     # Synthetic
     GPT_OSS_120B        = auto()

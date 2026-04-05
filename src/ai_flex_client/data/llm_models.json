@@ -306,6 +306,18 @@
       "display": "Qwen 3.5 122B (E2EE)",
       "input_price": 0.50,
       "output_price": 4.00
+    },
+    "google.gemma-4-26b-a4b-it": {
+      "enum_name": "GEMMA_4_26B",
+      "display": "Google Gemma 4 26B A4B Instruct",
+      "input_price": 0.16,
+      "output_price": 0.50
+    },
+    "google.gemma-4-31b-it": {
+      "enum_name": "GEMMA_4_31B",
+      "display": "Google Gemma 4 31B Instruct",
+      "input_price": 0.17,
+      "output_price": 0.50
     }
   },
 
